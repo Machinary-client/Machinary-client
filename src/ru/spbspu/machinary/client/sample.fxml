@@ -20,10 +20,10 @@
    <children>
       <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="640.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
          <content>
-            <VBox id="historyOfCommand" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="290.0" />
+            <VBox id="historyOfCommands" fx:id="historyOfCommands" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="290.0" />
          </content>
       </ScrollPane>
-      <Label id="currentCommand" fx:id="currentCommandLabel" text="current" GridPane.rowIndex="1" />
-      <MediaView id="mediaView" fitHeight="200.0" fitWidth="300.0" />
+      <Label id="currentCommandLabel" fx:id="currentCommandLabel" text="current" GridPane.rowIndex="1" />
+      <MediaView id="mediaView" fx:id="mediaView" fitHeight="200.0" fitWidth="300.0" />
    </children>
 </GridPane>
