@@ -1,7 +1,10 @@
 package ru.spbspu.machinary.client;
 
+import javafx.beans.Observable;
+import javafx.beans.value.ObservableStringValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -16,22 +19,19 @@ public class Controller {
     private MediaView mediaView;
     @FXML
     private VBox historyOfCommands;
+    @FXML
+    private ObservableStringValue command;
 
-    public Controller(Parent root) {
-        currentCommandLabel = (Label) root.lookup("#currentCommandLabel");
-        currentCommandLabel.setText("Inizialization client");
-        historyOfCommands = (VBox) root.lookup("#historyOfCommands");
+    public Controller() {
     }
 
     @FXML
-    public void inizialize() {
+    public void initialize() {
 
     }
 
     public synchronized void setMessage(String str) {
-        currentCommandLabel.setText(str);
-        Label label = new Label(str);
-//        historyOfCommands.getChildren().add(label);
+
     }
 
 }

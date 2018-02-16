@@ -3,13 +3,12 @@ package ru.spbspu.machinary.client;
 public class MachineController extends Thread {
 
     private MachineConnector machineConnector;
-    private Controller controller;
+    private static Controller controller = new Controller();
     private boolean isGood = true;
 
 
-    public MachineController(String address, Controller controller) {
+    public MachineController(String address) {
         machineConnector = new MachineConnector(address);
-        this.controller = controller;
     }
 
     public void run() {

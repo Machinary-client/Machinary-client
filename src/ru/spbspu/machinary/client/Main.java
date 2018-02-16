@@ -21,11 +21,10 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Client");
         primaryStage.setScene(new Scene(root, 720, 640));
-        Controller controller = new Controller(root);
-        controller.setMessage("Bla bla");
-        machineController = new MachineController("tcp://localhost:5555", new Controller(root));
+        machineController = new MachineController("tcp://localhost:5555");
         machineController.start();
         primaryStage.show();
+        System.out.println();
     }
 
 
