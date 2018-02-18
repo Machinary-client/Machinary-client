@@ -1,16 +1,18 @@
 package ru.spbspu.machinary.client;
 
-import javafx.beans.Observable;
 import javafx.beans.value.ObservableStringValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+
+import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaView;
-import javafx.stage.Stage;
+import javafx.util.FXPermission;
+
 
 public class Controller {
     @FXML
@@ -18,20 +20,22 @@ public class Controller {
     @FXML
     private MediaView mediaView;
     @FXML
-    private VBox historyOfCommands;
-    @FXML
-    private ObservableStringValue command;
+    private ListView<String> historyOfCommands;
+
+    private boolean init = false;
+    private ObservableList<String> commands = FXCollections.observableArrayList();
 
     public Controller() {
     }
 
     @FXML
     public void initialize() {
-
+        historyOfCommands.setItems(commands);
     }
 
-    public synchronized void setMessage(String str) {
-
+    @FXML
+    public void setMessage(String str) {
+        commands.add(str);
     }
 
 }

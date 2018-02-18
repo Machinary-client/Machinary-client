@@ -18,13 +18,15 @@ public class Main extends Application {
     }
 
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("Client");
+        Controller controller = loader.getController();
         primaryStage.setScene(new Scene(root, 720, 640));
-        machineController = new MachineController("tcp://localhost:5555");
+        machineController = new MachineController("tcp://localhost:5555", controller);
         machineController.start();
         primaryStage.show();
-        System.out.println();
+        machineController.interrupt();
     }
 
 
