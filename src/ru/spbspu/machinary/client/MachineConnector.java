@@ -17,7 +17,7 @@ public class MachineConnector {
     }
 
     public String getReply() {
-        return socket.recvStr();
+        return socket.recvStr(0);
     }
 
     protected void finalize() {

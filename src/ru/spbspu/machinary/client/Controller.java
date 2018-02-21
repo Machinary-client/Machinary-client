@@ -11,7 +11,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaView;
-import javafx.util.FXPermission;
 
 
 public class Controller {
@@ -38,4 +37,7 @@ public class Controller {
         commands.add(str);
     }
 
+    class Analizator {
+
+    }
 }

@@ -23,7 +23,7 @@ public class Main extends Application {
         primaryStage.setTitle("Client");
         Controller controller = loader.getController();
         primaryStage.setScene(new Scene(root, 720, 640));
-        machineController = new MachineController("tcp://localhost:5555", controller);
+        machineController = new MachineController("tcp://localhost:5554", controller);
         machineController.start();
         primaryStage.show();
         machineController.interrupt();
