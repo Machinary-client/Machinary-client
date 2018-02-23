@@ -12,6 +12,8 @@ import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaView;
 
+import java.util.HashMap;
+
 
 public class Controller {
     @FXML
@@ -32,12 +34,11 @@ public class Controller {
         historyOfCommands.setItems(commands);
     }
 
-    @FXML
+
     public void setMessage(String str) {
+        currentCommandLabel.setText(str);
         commands.add(str);
+        // TODO: 23.02.2018 Make Analizator and return Media to show
     }
 
-    class Analizator {
-
-    }
 }

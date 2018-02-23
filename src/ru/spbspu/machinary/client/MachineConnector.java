@@ -6,10 +6,12 @@ public class MachineConnector {
     private ZMQ.Context context;
     private ZMQ.Socket socket;
 
-    public MachineConnector(String address) {
+    private boolean finish = false;
+
+    MachineConnector(String address) {
         context = ZMQ.context(1);
         socket = context.socket(ZMQ.REQ);
-        socket.connect(address);//TODO: make like parametr//
+        socket.connect(address);
     }
 
     public void sent(String str) {
@@ -20,9 +22,19 @@ public class MachineConnector {
         return socket.recvStr(0);
     }
 
-    protected void finalize() {
+    public void closeConnect() {
         socket.close();
         context.term();
+        finish = true;
+    }
+
+    @Override
+    @Deprecated
+    protected void finalize() {
+        if (!finish) {
+            socket.close();
+            context.term();
+        }
     }
 
 

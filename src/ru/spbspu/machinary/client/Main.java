@@ -1,6 +1,7 @@
 package ru.spbspu.machinary.client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,7 +13,6 @@ import javafx.stage.Stage;
 public class Main extends Application {
     private static MachineController machineController;
 
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -23,10 +23,12 @@ public class Main extends Application {
         primaryStage.setTitle("Client");
         Controller controller = loader.getController();
         primaryStage.setScene(new Scene(root, 720, 640));
-        machineController = new MachineController("tcp://localhost:5554", controller);
-        machineController.start();
+        machineController = new MachineController("tcp://localhost:5555", controller);
+
+        Thread thread = new Thread(machineController);
+        thread.start();
         primaryStage.show();
-        machineController.interrupt();
+        // FIXME: 23.02.2018 Find method to interrupt machineContriller (problem in interrubt by Thread.interrupt())
     }
 
 
