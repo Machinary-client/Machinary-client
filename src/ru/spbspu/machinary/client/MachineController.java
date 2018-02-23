@@ -1,17 +1,12 @@
 package ru.spbspu.machinary.client;
 
-import javafx.application.Platform;
-import org.zeromq.ZMQ;
+public class MachineController implements Runnable {
 
-public class MachineController extends Thread {
-
-    private MachineConnector machineConnector;
+    private Connector machineConnector;
     private Controller controller;
     private boolean isInterrupt = false;
-    private ZMQ.Context context;
-    private ZMQ.Socket socket;
 
-    MachineController(String address, Controller controller) {
+    MachineController(String address, FXMLController controller) {
         this.controller = controller;
         machineConnector = new MachineConnector(address);
     }
@@ -19,14 +14,14 @@ public class MachineController extends Thread {
     public void run() {
         String input = "Hello";
         while (!Thread.interrupted() && !isInterrupt) {
-
-            machineConnector.sent(input);
-            final String showStr = input;
-            Platform.runLater(() -> controller.setMessage(showStr));
-            input = machineConnector.getReply();
-            System.out.println("work");
+            machineConnector.send(input);
+            controller.setMessage(input);
+            input = machineConnector.getReplyStr();
         }
-        machineConnector.closeConnect();
+        machineConnector.closeConnection();
     }
 
+    public void finish() { // FIXME: 23.02.2018  
+        isInterrupt = true;
+    }
 }

@@ -1,44 +1,9 @@
 package ru.spbspu.machinary.client;
 
-import javafx.beans.value.ObservableStringValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaView;
-
-import java.util.HashMap;
-
-
-public class Controller {
-    @FXML
-    private Label currentCommandLabel;
-    @FXML
-    private MediaView mediaView;
-    @FXML
-    private ListView<String> historyOfCommands;
-
-    private boolean init = false;
-    private ObservableList<String> commands = FXCollections.observableArrayList();
-
-    public Controller() {
-    }
-
-    @FXML
-    public void initialize() {
-        historyOfCommands.setItems(commands);
-    }
-
-
-    public void setMessage(String str) {
-        currentCommandLabel.setText(str);
-        commands.add(str);
-        // TODO: 23.02.2018 Make Analizator and return Media to show
-    }
-
+interface Controller {
+    /**
+     * Send message to UI
+     * @param string message that will be show on the screen
+     */
+    void setMessage(final String string);
 }

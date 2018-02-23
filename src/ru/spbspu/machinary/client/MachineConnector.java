@@ -2,30 +2,58 @@ package ru.spbspu.machinary.client;
 
 import org.zeromq.ZMQ;
 
-public class MachineConnector {
+public class MachineConnector implements Connector {
     private ZMQ.Context context;
     private ZMQ.Socket socket;
-
+    private String address;
+    private boolean open = false;
     private boolean finish = false;
 
     MachineConnector(String address) {
+        this.address = address;
+        openConnection();
+    }
+
+    @Override
+    public void openConnection() {
+        if (open) {
+            return;
+        }
+        open = true;
+        finish = false;
         context = ZMQ.context(1);
         socket = context.socket(ZMQ.REQ);
         socket.connect(address);
     }
 
-    public void sent(String str) {
+    @Override
+    public void closeConnection() {
+        if (open && !finish) {
+            socket.close();
+            context.term();
+            finish = true;
+            open = false;
+        }
+    }
+
+    @Override
+    public void send(String str) {
         socket.send(str, 0);
     }
 
-    public String getReply() {
-        return socket.recvStr(0);
+    @Override
+    public void send(byte[] data) {
+        socket.send(data, 0);
     }
 
-    public void closeConnect() {
-        socket.close();
-        context.term();
-        finish = true;
+    @Override
+    public byte[] getReply() {
+        return socket.recv(0);
+    }
+
+    @Override
+    public String getReplyStr() {
+        return socket.recvStr(0);
     }
 
     @Override
