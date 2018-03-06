@@ -11,8 +11,11 @@ import javafx.scene.control.ListView;
 
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
+import java.io.File;
 import java.util.HashMap;
 
 
@@ -29,15 +32,23 @@ public class FXMLController implements Controller {
     @FXML
     public void initialize() {
         historyOfCommands.setItems(commands);
+
     }
 
     @Override
     public void setMessage(final String str) {
+
         Platform.runLater(() -> {
             currentCommandLabel.setText(str);
             commands.add(str);
+
+            //MediaPlayer player = new MediaPlayer(media);
+            //mediaView.setMediaPlayer(player);
         });
-        // TODO: 23.02.2018 Make Analizator and return Media to show
     }
 
+    class Analyze {
+        //private HashMap<String, MediaPlayer>
+    }
 }
+
