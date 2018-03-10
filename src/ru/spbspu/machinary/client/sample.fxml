@@ -5,9 +5,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.media.MediaView?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbspu.machinary.client.FXMLController">
+<GridPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbspu.machinary.client.FXMLController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="300.0" />
@@ -18,7 +17,6 @@
   </rowConstraints>
    <children>
       <Label id="currentCommandLabel" fx:id="currentCommandLabel" text="current" GridPane.rowIndex="1" />
-      <MediaView id="mediaView" fx:id="mediaView" fitHeight="200.0" fitWidth="300.0" />
       <ListView fx:id="historyOfCommands" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />
    </children>
 </GridPane>
