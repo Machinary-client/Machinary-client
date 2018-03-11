@@ -12,10 +12,11 @@ public class MachineController implements Runnable {
     }
 
     public void run() {
-        String input = "Hello";
+        String input = "Stand by";
         while (!Thread.interrupted() && !isInterrupt) {
             machineConnector.send(input);
             controller.setMessage(input);
+            System.out.println("test");
             input = machineConnector.getReplyStr();
         }
         machineConnector.closeConnection();
