@@ -1,29 +1,26 @@
 package ru.spbspu.machinary.client;
 
 import javafx.application.Platform;
-import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.util.Pair;
 
-import javax.naming.InvalidNameException;
 import java.io.File;
 import java.util.HashMap;
-import java.util.InvalidPropertiesFormatException;
-import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 
 public class FXMLController implements Controller {
@@ -40,9 +37,9 @@ public class FXMLController implements Controller {
 
     private Analyze analyze;
 
-    private final ImageView imageView = new ImageView();
+    private final long STANDART_DELAY = 1000;
 
-    private final MediaView mediaView = new MediaView();
+    private final long IMAGE_DELAY = 3000;
 
     @FXML
     public void initialize() {
@@ -53,13 +50,14 @@ public class FXMLController implements Controller {
 
     @Override
     public void setMessage(final String str) {
-
         Platform.runLater(() -> {
             currentCommandLabel.setText(str);
             commands.add(str);
-            Executable show = analyze.getExec(str);
-            show.exec(pane);
         });
+        Executable show = analyze.getExec(str);
+        show.exec(pane);
+
+        System.out.println("ok");
 
     }
 
@@ -86,7 +84,7 @@ public class FXMLController implements Controller {
 
             if (string.equals("Stand by")) {
                 imagePath = "res/images/standby.jpg";
-                //videoPath = "res/videos/1.mp4";
+                videoPath = "res/videos/1.mp4";
                 System.out.println("stand by");
             } else if (string.equals("mscdocument Bolt;")) {
                 isBolt = true;
@@ -219,53 +217,74 @@ public class FXMLController implements Controller {
 
             if (imagePath != null && videoPath != null) {
                 return pane1 -> {
-                    cleanZeroCell(pane1);
-                    File fileImage = new File(imagePath);
-                    File fileVideo = new File(videoPath);
-                    Media media = new Media(fileVideo.toURI().toString());
-                    Image image = new Image(fileImage.toURI().toString());
-                    imageView.setImage(image);
-                    pane1.add(imageView, 0, 0);
-                    try {
-                        Thread.sleep(500);//TODO: maybe remove
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    pane1.getChildren().remove(imageView);
-                    MediaPlayer mediaPlayer = new MediaPlayer(media);
-                    //TODO: tune medi player
-                    mediaView.setMediaPlayer(mediaPlayer);
-                    pane1.add(mediaView, 0, 0);
-                    mediaPlayer.play();
+                    showImage(pane1);
+                    showVideo(pane1);
                 };
             } else if (imagePath != null) {
-                return pane1 -> {
-                    cleanZeroCell(pane1);
-                    File fileImage = new File(imagePath);
-                    Image image = new Image(fileImage.toURI().toString());
-                    imageView.setImage(image);
-                    pane1.add(imageView, 0, 0);
-                };
+                return this::showImage;
             } else if (videoPath != null) {
-                return pane1 -> {
-                    cleanZeroCell(pane1);
-                    File fileVideo = new File(videoPath);
-                    Media media = new Media(fileVideo.toURI().toString());
-                    MediaPlayer mediaPlayer = new MediaPlayer(media);
-                    //TODO: tune medi player
-                    mediaView.setMediaPlayer(mediaPlayer);
-                    pane1.add(mediaView, 0, 0);
-                    mediaPlayer.play();
-                };
+
+                return this::showVideo;
             }
 
-            return pane1 -> {
+            return pane -> {
             };
         }
 
         private void cleanZeroCell(GridPane pane1) {
-            pane1.getChildren().remove(imageView);
-            pane1.getChildren().remove(mediaView);
+            if (!pane1.getChildren().isEmpty()) {
+                pane1.getChildren().remove(0);
+            }
+        }
+
+        private void showImage(GridPane panel) {
+            CountDownLatch latch = new CountDownLatch(1);
+            Platform.runLater(() -> cleanZeroCell(panel));
+            File fileImage = new File(imagePath);
+            Image image = new Image(fileImage.toURI().toString());
+            Platform.runLater(() -> {
+                ImageView imageView = new ImageView(image);
+                //TODO: fixme
+                imageView.setFitWidth(panel.getWidth());
+                imageView.setFitHeight(panel.getHeight());
+                imageView.autosize();
+                panel.add(imageView, 0, 0);
+                latch.countDown();
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(IMAGE_DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            latch.countDown();
+
+
+        }
+
+        private void showVideo(GridPane panel) {
+            CountDownLatch latch = new CountDownLatch(1);
+            Platform.runLater(() -> cleanZeroCell(panel));
+            File fileVideo = new File(videoPath);
+            Platform.runLater(() -> {
+                Media media = new Media(fileVideo.toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                //TODO: tune media player
+                MediaView mediaView = new MediaView(mediaPlayer);
+                panel.add(mediaView, 0, 0);
+                mediaPlayer.play();
+                mediaPlayer.setOnEndOfMedia(latch::countDown);
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
