@@ -262,12 +262,10 @@ public class FXMLController implements Controller {
                 e.printStackTrace();
             }
 
-            latch.countDown();
-
-
         }
 
         private void showVideo(GridPane panel) {
+            long waitTime = 0;
             CountDownLatch latch = new CountDownLatch(1);
             Platform.runLater(() -> cleanZeroCell(panel));
             File fileVideo = new File(videoPath);
@@ -282,6 +280,11 @@ public class FXMLController implements Controller {
             });
             try {
                 latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(waitTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
