@@ -10,6 +10,7 @@ public class Main extends Application {
     private static MachineController machineController;
 
     public static void main(String[] args) {
+        TechnicalProcess technicalProcess = new TechnicalProcess();
         launch(args);
         if (machineController!=null){
             machineController.finish();

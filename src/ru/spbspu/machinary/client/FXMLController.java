@@ -104,6 +104,7 @@ public class FXMLController implements Controller {
             } else if (string.equals("Exit")) {
                 imagePath = "res/images/keepcalm.png";
                 //SIGNALS end
+                //System.exit(0);
             } else {
                 if (isBolt) {
                     //BOLT begin
