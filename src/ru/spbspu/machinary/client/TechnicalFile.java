@@ -1,11 +1,15 @@
 package ru.spbspu.machinary.client;
 
+import java.beans.XMLDecoder;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 public class TechnicalFile {
 
@@ -14,10 +18,10 @@ public class TechnicalFile {
     private String technologySwitcher;
     private long imageDelay;
     private long videoDelay;
-    private SpecialCommand UnknownCommand;
+    private InputActions UnknownCommand;
 
     public TechnicalFile(String path) throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get(path));
+        /*List<String> lines = Files.readAllLines(Paths.get(path));
 
         for (String line : lines) {
             if (line.isEmpty()) {
@@ -25,7 +29,7 @@ public class TechnicalFile {
             }
 
         }
-
+*/
     }
 
     public long getImageDelay() {
@@ -41,7 +45,4 @@ public class TechnicalFile {
 
     }
 
-    enum SpecialCommand {
-        EXIT, SKIP, FAIL, CRUSH
-    }
 }
