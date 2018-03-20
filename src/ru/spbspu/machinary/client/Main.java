@@ -16,7 +16,9 @@ public class Main extends Application {
         try {
             TechnicalProcess technicalProcess = new TechnicalProcess("firstProc");
         } catch (IOException | InvalidTypeException e) {
+            System.err.println(e.getMessage());
             e.printStackTrace();
+
         }
         //launch(args);
         if (machineController!=null){

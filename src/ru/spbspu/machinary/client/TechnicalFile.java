@@ -24,29 +24,59 @@ public class TechnicalFile {
     public TechnicalFile(String path) throws IOException, InvalidTypeException {
         Tokenizer tokenizer = new Tokenizer(new FileInputStream(new File(path)));
         tokenizer.setInputActions(new ArrayList<>(Arrays.asList("exit", "fail", "skip", "crush")));
-        tokenizer.setSpecialCommands(new ArrayList<>(Arrays.asList("process_switcher", "technology_switcher",
+        tokenizer.setSpecialCommands(new ArrayList<>(Arrays.asList("process_switcher", "technology_switcher", "unknown_command",
                 "image_delay", "video_delay")));
 
         tokenizer.setFileExtensions(new ArrayList<>(Arrays.asList(".tech", ".cfg", ".txt",
                 ".png", "jpeg", "jpg", ".mp4")));
 
-        Token token = null;
+        Token currentToken = null;
+        Token prevToken = null;
+        Token important = null;
+
         do {
             try {
-                token = tokenizer.next();
+                currentToken = tokenizer.next();
             } catch (InvalidTypeException invalidTypeForEncoding) {
                 invalidTypeForEncoding.printStackTrace();
             }
-            if (token == null) {
+            if (currentToken == null) {
                 break;
             }
-            if (token.type == TokenType.INVALID) {
-                throw new InvalidTypeException("Invalid token: " + token);
+
+            switch (currentToken.type) {
+                case SPECIAL_COMMAND:
+
+                    break;
+
+                case DELIMITER: {
+                    important = prevToken;
+                    prevToken = currentToken;
+
+                    break;
+                }
+
+                case INPUT_ACTION:
+
+                    break;
+                case CUSTOMER_COMMAND:
+
+                    break;
+
+                case PATH:
+
+                    break;
+
+                case NUMBER:
+
+                    break;
+
+                case UNKNOWN:
+                    throw new InvalidTypeException("Unknown token: " + currentToken);
+                case INVALID:
+                    throw new InvalidTypeException("Invalid token: " + currentToken);
             }
-            if (token.type == TokenType.UNKNOWN) {
-                throw new InvalidTypeException("Unknown token: " + token);
-            }
-            System.out.println(token);
+            System.out.println(currentToken);
         } while (tokenizer.hasNext());
     }
 
