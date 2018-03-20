@@ -1,17 +1,24 @@
 package ru.spbspu.machinary.client;
 
+import com.sun.jdi.InvalidTypeException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Main extends Application {
     private static MachineController machineController;
 
     public static void main(String[] args) {
-        TechnicalProcess technicalProcess = new TechnicalProcess();
-        launch(args);
+        try {
+            TechnicalProcess technicalProcess = new TechnicalProcess("firstProc");
+        } catch (IOException | InvalidTypeException e) {
+            e.printStackTrace();
+        }
+        //launch(args);
         if (machineController!=null){
             machineController.finish();
         }
