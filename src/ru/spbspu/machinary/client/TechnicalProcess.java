@@ -27,6 +27,10 @@ public class TechnicalProcess {
         defaultFile = new TechnicalFile(PATH + name + "/default" + FILE_EXTENSION);
     }
 
+    public Action getAction(String command) {
+        return null;
+    }
+
     private static TechnicalFile readCommon() throws IOException, InvalidTypeException {
         return new TechnicalFile("processes/common.cfg");
     }

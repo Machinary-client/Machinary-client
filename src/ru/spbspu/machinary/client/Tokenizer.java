@@ -5,12 +5,11 @@ import com.sun.jdi.InvalidTypeException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class Tokenizer {
 
-    private final char DELIMITER = ':';
+    private final char ASSIGNER = ':';
     private List<String> specialCommands = new ArrayList<>();
     private List<String> inputActions = new ArrayList<>();
     private List<String> fileExtensions = new ArrayList<>();
@@ -60,9 +59,9 @@ public class Tokenizer {
             }
 
 
-            if ((token.type == TokenType.UNKNOWN) && (ch == DELIMITER)) {
+            if ((token.type == TokenType.UNKNOWN) && (ch == ASSIGNER)) {
                 token.value += ch;
-                token.type = TokenType.DELIMITER;
+                token.type = TokenType.ASSIGNER;
                 return token;
             }
             if (!Character.isWhitespace(ch) && (token.type == TokenType.UNKNOWN)) {
@@ -93,7 +92,7 @@ public class Tokenizer {
             }
 
             if (token.type == TokenType.SPECIAL_INPUT) {
-                if ((ch == DELIMITER) || (ch == ' ')) {
+                if ((ch == ASSIGNER) || (ch == ' ')) {
                     inputStream.unread(ch);
                     checkToken(token);
                     return token;
