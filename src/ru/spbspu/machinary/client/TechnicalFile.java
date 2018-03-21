@@ -15,7 +15,7 @@ public class TechnicalFile {
     private static final String PROCESS_SWITCHER = "process_switcher";
     private static final String TECHNOLOGY_SWITCHER = "technology_switcher";
 
-    private HashMap<String, Action> customerCommands;
+    private HashMap<String, Action> customerCommands = new HashMap<>();
     private long imageDelay;
     private long videoDelay;
     private Action unknownCommand;
@@ -31,10 +31,13 @@ public class TechnicalFile {
         tokenizer.setFileExtensions(new ArrayList<>(Arrays.asList(".tech", ".cfg", ".txt",
                 ".png", "jpeg", "jpg", ".mp4")));
 
+        parseFile(tokenizer);
+    }
+
+    private void parseFile(Tokenizer tokenizer) throws IOException, InvalidTypeException {
         Token currentToken = null;
         Token prevToken = null;
         Token important = null;
-
         do {
             try {
                 currentToken = tokenizer.next();
@@ -85,19 +88,19 @@ public class TechnicalFile {
 
                         if (important.value.equals(UNKNOWN_COMMAND)) {
                             unknownCommand = new Action(Actions.valueOf(currentToken.value.toUpperCase()), new ArrayList<>());
+
                         }
 
                     } else if (important.type == TokenType.CUSTOMER_COMMAND) {
                         customerCommands.put(important.value,
                                 new Action(Actions.valueOf(currentToken.value.toUpperCase()), new ArrayList<>()));
                     }
-                    prevToken = currentToken;
-                    important = currentToken; // TODO: 20.03.2018 maybe change in latest versions
-
+                    important = null;
+                    prevToken = null;
 
                     break;
                 }
-                case CUSTOMER_COMMAND:
+                case CUSTOMER_COMMAND: {
                     if ((important != null && important.type == TokenType.CUSTOMER_COMMAND) || prevToken != null &&
                             ((prevToken.type == TokenType.CUSTOMER_COMMAND))) {
                         throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s",
@@ -109,9 +112,15 @@ public class TechnicalFile {
                         if (important != null && important.type == TokenType.SPECIAL_COMMAND) {
                             // TODO: 20.03.2018 process_switcher and technology_switcher
                             if (important.value.equals(PROCESS_SWITCHER)) {
-                                customerCommands.put(currentToken.value, new Action(Actions.SWITCH_PROCESS,new ArrayList<>()));
+                                customerCommands.put(currentToken.value, new Action(Actions.SWITCH_PROCESS, new ArrayList<>()));
+                                important = null;
+                                prevToken = null;
+                                break;
                             } else if (important.value.equals(TECHNOLOGY_SWITCHER)) {
-                                customerCommands.put(currentToken.value, new Action(Actions.SWITCH_TECHNOLOGY,new ArrayList<>()));
+                                customerCommands.put(currentToken.value, new Action(Actions.SWITCH_TECHNOLOGY, new ArrayList<>()));
+                                important = null;
+                                prevToken = null;
+                                break;
                             }
                         }
 
@@ -119,15 +128,50 @@ public class TechnicalFile {
                     prevToken = currentToken;
                     important = currentToken;
                     break;
+                }
+                case PATH: {
+                    if (important == null || prevToken == null || prevToken.type != TokenType.ASSIGNER &&
+                            (important.type != TokenType.CUSTOMER_COMMAND && prevToken.type != TokenType.SPECIAL_COMMAND)) {
+                        throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s; %s",
+                                important, prevToken, currentToken));
+                    }
 
-                case PATH:
+                    if (important.type == TokenType.SPECIAL_COMMAND) {
+                        if (important.value.equals(UNKNOWN_COMMAND)) {
+                            unknownCommand = new Action(Actions.EXECUTE, new ArrayList<>(Collections.singletonList(currentToken.value)));
+                        }
+                    } else if (important.type == TokenType.CUSTOMER_COMMAND) {
+                        customerCommands.put(important.value, new Action(Actions.EXECUTE,
+                                new ArrayList<>(Collections.singletonList(currentToken.value))));
+                    }
 
+                    important = null;
+                    prevToken = null;
                     break;
+                }
 
-                case NUMBER:
+                case NUMBER: {
+                    if (prevToken == null || important == null || prevToken.type != TokenType.ASSIGNER || important.type != TokenType.SPECIAL_COMMAND) {
+                        throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s; %s",
+                                important, prevToken, currentToken));
+                    }
 
+                    try {
+                        if (important.value.equals(IMAGE_DELAY)) {
+                            imageDelay = Long.parseLong(currentToken.value);
+                        } else if (important.value.equals(VIDEO_DELAY)) {
+                            videoDelay = Long.parseLong(currentToken.value);
+                        } else {
+                            throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s; %s",
+                                    important, prevToken, currentToken));
+                        }
+                    } catch (NumberFormatException err) {
+                        throw new InvalidTypeException("Invalid NUMBER " + currentToken);
+                    }
+                    important = null;
+                    prevToken = null;
                     break;
-
+                }
                 case UNKNOWN:
                     throw new InvalidTypeException("Unknown token: " + currentToken);
                 case INVALID:
@@ -136,6 +180,7 @@ public class TechnicalFile {
             System.out.println(currentToken);
         } while (tokenizer.hasNext());
     }
+
 
     public long getImageDelay() {
         return imageDelay;
