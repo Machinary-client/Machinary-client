@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Action {
-    private Actions action;
+    private ActionType actionType;
     private List<String> files;
 
-    public Action(Actions action, List<String> files) {
-        this.action = action;
+    public Action(ActionType actionType, List<String> files) {
+        this.actionType = actionType;
         this.files = files;
     }
 
@@ -17,15 +17,15 @@ public class Action {
         files.addAll(new ArrayList<>(Arrays.asList(paths)));
     }
 
-    public Actions getAction() {
-        return action;
+    public ActionType getActionType() {
+        return actionType;
     }
 
-    public List<String> getFiles() {
+    public List<String> getFilesPaths() {
         return files;
     }
 }
 
-enum Actions {
+enum ActionType {
     EXECUTE, SKIP, EXIT, FAIL, CRUSH, SWITCH_TECHNOLOGY, SWITCH_PROCESS
 }

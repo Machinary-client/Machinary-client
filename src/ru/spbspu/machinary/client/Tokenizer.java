@@ -99,7 +99,6 @@ public class Tokenizer {
                 }
                 token.value += ch;
             }
-            //System.out.println(token);
         }
 
         if (end) {

@@ -1,6 +1,7 @@
 package ru.spbspu.machinary.client;
 
 import com.sun.jdi.InvalidTypeException;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,10 +16,15 @@ public class TechnicalFile {
     private static final String PROCESS_SWITCHER = "process_switcher";
     private static final String TECHNOLOGY_SWITCHER = "technology_switcher";
 
+    private Pair<Boolean, Long> imageDelay = new Pair<>(false, 0L);
+    private Pair<Boolean, Long> videoDelay = new Pair<>(false, 0L);
+
     private HashMap<String, Action> customerCommands = new HashMap<>();
-    private long imageDelay;
-    private long videoDelay;
     private Action unknownCommand;
+    private Action technologySwitcher;
+    private Action processSwitcher;
+
+    //private Action exit,skip,fail,crush;
 
 
     public TechnicalFile(String path) throws IOException, InvalidTypeException {
@@ -28,10 +34,35 @@ public class TechnicalFile {
         tokenizer.setSpecialCommands(new ArrayList<>(Arrays.asList(PROCESS_SWITCHER, TECHNOLOGY_SWITCHER,
                 UNKNOWN_COMMAND, IMAGE_DELAY, VIDEO_DELAY)));
 
-        tokenizer.setFileExtensions(new ArrayList<>(Arrays.asList(".tech", ".cfg", ".txt",
+        tokenizer.setFileExtensions(new ArrayList<>(Arrays.asList(".tech", ".cfg",
                 ".png", "jpeg", "jpg", ".mp4")));
 
         parseFile(tokenizer);
+    }
+
+    public Pair<Boolean, Long> getImageDelay() {
+        return imageDelay;
+    }
+
+    public Pair<Boolean, Long> getVideoDelay() {
+        return videoDelay;
+    }
+
+    public Action getAction(String command) {
+        Action action = customerCommands.get(command);
+        if ((action == null) && (unknownCommand != null)) {
+            action = unknownCommand;
+        }
+        return action; // TODO: 16.03.2018 FIXME
+
+    }
+
+    public Action getTechnologySwitcher() {
+        return technologySwitcher;
+    }
+
+    public Action getProcessSwitcher() {
+        return processSwitcher;
     }
 
     private void parseFile(Tokenizer tokenizer) throws IOException, InvalidTypeException {
@@ -87,13 +118,13 @@ public class TechnicalFile {
                     if (important.type == TokenType.SPECIAL_COMMAND) {
 
                         if (important.value.equals(UNKNOWN_COMMAND)) {
-                            unknownCommand = new Action(Actions.valueOf(currentToken.value.toUpperCase()), new ArrayList<>());
+                            unknownCommand = new Action(ActionType.valueOf(currentToken.value.toUpperCase()), new ArrayList<>());
 
                         }
 
                     } else if (important.type == TokenType.CUSTOMER_COMMAND) {
                         customerCommands.put(important.value,
-                                new Action(Actions.valueOf(currentToken.value.toUpperCase()), new ArrayList<>()));
+                                new Action(ActionType.valueOf(currentToken.value.toUpperCase()), new ArrayList<>()));
                     }
                     important = null;
                     prevToken = null;
@@ -110,14 +141,15 @@ public class TechnicalFile {
                     if (prevToken != null && prevToken.type == TokenType.ASSIGNER) {
 
                         if (important != null && important.type == TokenType.SPECIAL_COMMAND) {
-                            // TODO: 20.03.2018 process_switcher and technology_switcher
                             if (important.value.equals(PROCESS_SWITCHER)) {
-                                customerCommands.put(currentToken.value, new Action(Actions.SWITCH_PROCESS, new ArrayList<>()));
+                                processSwitcher = new Action(ActionType.SWITCH_PROCESS,
+                                        new ArrayList<>(Collections.singletonList(currentToken.value)));
                                 important = null;
                                 prevToken = null;
                                 break;
                             } else if (important.value.equals(TECHNOLOGY_SWITCHER)) {
-                                customerCommands.put(currentToken.value, new Action(Actions.SWITCH_TECHNOLOGY, new ArrayList<>()));
+                                technologySwitcher = new Action(ActionType.SWITCH_TECHNOLOGY,
+                                        new ArrayList<>(Collections.singletonList(currentToken.value)));
                                 important = null;
                                 prevToken = null;
                                 break;
@@ -130,18 +162,18 @@ public class TechnicalFile {
                     break;
                 }
                 case PATH: {
-                    if (important == null || prevToken == null || prevToken.type != TokenType.ASSIGNER &&
-                            (important.type != TokenType.CUSTOMER_COMMAND && prevToken.type != TokenType.SPECIAL_COMMAND)) {
+                    if (important == null || prevToken == null || prevToken.type != TokenType.ASSIGNER ||
+                            (important.type != TokenType.CUSTOMER_COMMAND && important.type != TokenType.SPECIAL_COMMAND)) {
                         throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s; %s",
                                 important, prevToken, currentToken));
                     }
 
                     if (important.type == TokenType.SPECIAL_COMMAND) {
                         if (important.value.equals(UNKNOWN_COMMAND)) {
-                            unknownCommand = new Action(Actions.EXECUTE, new ArrayList<>(Collections.singletonList(currentToken.value)));
+                            unknownCommand = new Action(ActionType.EXECUTE, new ArrayList<>(Collections.singletonList(currentToken.value)));
                         }
                     } else if (important.type == TokenType.CUSTOMER_COMMAND) {
-                        customerCommands.put(important.value, new Action(Actions.EXECUTE,
+                        customerCommands.put(important.value, new Action(ActionType.EXECUTE,
                                 new ArrayList<>(Collections.singletonList(currentToken.value))));
                     }
 
@@ -157,13 +189,16 @@ public class TechnicalFile {
                     }
 
                     try {
-                        if (important.value.equals(IMAGE_DELAY)) {
-                            imageDelay = Long.parseLong(currentToken.value);
-                        } else if (important.value.equals(VIDEO_DELAY)) {
-                            videoDelay = Long.parseLong(currentToken.value);
-                        } else {
-                            throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s; %s",
-                                    important, prevToken, currentToken));
+                        switch (important.value) {
+                            case IMAGE_DELAY:
+                                imageDelay = new Pair<>(true, Long.parseLong(currentToken.value));
+                                break;
+                            case VIDEO_DELAY:
+                                videoDelay = new Pair<>(true, Long.parseLong(currentToken.value));
+                                break;
+                            default:
+                                throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s; %s",
+                                        important, prevToken, currentToken));
                         }
                     } catch (NumberFormatException err) {
                         throw new InvalidTypeException("Invalid NUMBER " + currentToken);
@@ -177,22 +212,9 @@ public class TechnicalFile {
                 case INVALID:
                     throw new InvalidTypeException("Invalid token: " + currentToken);
             }
-            System.out.println(currentToken);
         } while (tokenizer.hasNext());
-    }
-
-
-    public long getImageDelay() {
-        return imageDelay;
-    }
-
-    public long getVideoDelay() {
-        return videoDelay;
-    }
-
-    public Action getAction(String command) {
-        return null; // TODO: 16.03.2018 FIXME
 
     }
+
 
 }

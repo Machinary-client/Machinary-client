@@ -1,5 +1,9 @@
 package ru.spbspu.machinary.client;
 
+import com.sun.jdi.InvalidTypeException;
+
+import java.io.IOException;
+
 interface Controller {
     /**
      * Send message to UI
