@@ -209,6 +209,8 @@ public class TechnicalFile {
                 }
                 case UNKNOWN:
                     throw new InvalidTypeException("Unknown token: " + currentToken);
+
+
                 case INVALID:
                     throw new InvalidTypeException("Invalid token: " + currentToken);
             }

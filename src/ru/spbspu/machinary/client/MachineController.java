@@ -12,12 +12,24 @@ public class MachineController implements Runnable {
     }
 
     public void run() {
-        String input = "Stand by";
+
         while (!Thread.interrupted() && !isInterrupt) {
-            // FIXME: 25.03.2018
-            machineConnector.send(input);
+            String input = machineConnector.getReplyStr();
+            if (input == null) {
+                System.out.println("input is null");
+            }
             Action action = controller.setMessage(input);
-            input = machineConnector.getReplyStr();
+            if (action.getActionType() == ActionType.FAIL) {
+                input = "FAIL";
+            }
+            if (action.getActionType() == ActionType.CRUSH) {
+                input = "CRUSH";
+            }
+            if (action.getActionType() == ActionType.EXIT) {
+                isInterrupt = true;
+                input = "FINISH";
+            }
+            machineConnector.send(input);
         }
         machineConnector.closeConnection();
     }

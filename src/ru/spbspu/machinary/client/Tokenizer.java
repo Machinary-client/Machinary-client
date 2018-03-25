@@ -42,7 +42,7 @@ public class Tokenizer {
 
         while (hasNext()) {
             char ch = (char) inputStream.read();
-            //System.out.println("p1: ch = " + ch + "  hasNext = " + hasNext());
+
 
             if (ch == '#') { //skip comments
                 int i = skip();
@@ -58,6 +58,9 @@ public class Tokenizer {
                 return token;
             }
 
+            if (token.type == TokenType.UNKNOWN && Character.isWhitespace(ch)) {
+                continue;
+            }
 
             if ((token.type == TokenType.UNKNOWN) && (ch == ASSIGNER)) {
                 token.value += ch;
@@ -92,7 +95,7 @@ public class Tokenizer {
             }
 
             if (token.type == TokenType.SPECIAL_INPUT) {
-                if ((ch == ASSIGNER) || (ch == ' ')) {
+                if ((ch == ASSIGNER) || (Character.isWhitespace(ch))) {
                     inputStream.unread(ch);
                     checkToken(token);
                     return token;
@@ -101,7 +104,7 @@ public class Tokenizer {
             }
         }
 
-        if (end) {
+        if (end || token.type == TokenType.UNKNOWN) {
             if (token.value.isEmpty()) {
                 return null;
             }

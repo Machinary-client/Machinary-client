@@ -2,3 +2,4 @@
 "Exit": "res/images/keepcalm.png"
 "Stand by": "res/images/standby.jpg"
 unknown_command: skip
+image_delay: "10000"

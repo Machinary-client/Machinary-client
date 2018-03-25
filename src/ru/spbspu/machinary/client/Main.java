@@ -21,6 +21,12 @@ public class Main extends Application {
         } catch (FileNotFoundException | InvalidPropertiesFormatException e) {
             e.printStackTrace();
         }
+        try {
+            new TechnicalFile("processes/firstProc/default.tech");
+        } catch (IOException | InvalidTypeException e) {
+            System.err.println("WTF: "+ e.getMessage());
+            e.printStackTrace();
+        }
         launch(args);
         if (machineController != null) {
             machineController.finish();

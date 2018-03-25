@@ -53,7 +53,8 @@ public class FXMLController implements Controller {
         Executable show = null;
         try {
             show = analyze.getExec(str);
-        } catch (IOException | InvalidTypeException e) {
+        } catch ( IOException | InvalidTypeException e) {
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
         if (show == null) {
@@ -104,7 +105,7 @@ public class FXMLController implements Controller {
                 case EXECUTE:
                     System.out.println("Execute");
                     return pane1 -> execute(pane1, action);
-                case SWITCH_PROCESS: {
+                case SWITCH_PROCESS:
                     List<String> strings = action.getFilesPaths();
                     if (strings == null || strings.isEmpty()) {
                         throw new RuntimeException("Can't find process name");
@@ -114,8 +115,8 @@ public class FXMLController implements Controller {
                         throw new RuntimeException("Process must have name");
                     }
                     process = new TechnicalProcess(name);
-                    break;
-                }
+                    return pane1 -> {};
+
                 case SWITCH_TECHNOLOGY:
                     return pane1 -> {
                     };
@@ -144,7 +145,7 @@ public class FXMLController implements Controller {
                 double w = image.getWidth();
                 double width = panel.getWidth();
                 imageView.setFitWidth(width);
-                imageView.setFitHeight(w/h*width);
+                imageView.setFitHeight(h/w * width);
                 imageView.autosize();
                 panel.add(imageView, 0, 0);
                 latch.countDown();
@@ -175,7 +176,7 @@ public class FXMLController implements Controller {
                 double w = media.getWidth();
                 double width = panel.getWidth();
                 mediaView.setFitWidth(width);
-                mediaView.setFitHeight(w/h*width);
+                mediaView.setFitHeight(w / h * width);
                 panel.add(mediaView, 0, 0);
                 mediaPlayer.play();
                 mediaPlayer.setOnEndOfMedia(latch::countDown);
