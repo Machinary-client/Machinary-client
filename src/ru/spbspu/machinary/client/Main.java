@@ -41,7 +41,7 @@ public class Main extends Application {
         Parent root = loader.load();
         primaryStage.setTitle("Client");
         FXMLController controller = loader.getController();
-        primaryStage.setScene(new Scene(root, 720, 640));
+        primaryStage.setScene(new Scene(root, 1080, 720));
         machineController = new MachineController("tcp://" + ip + ":" + port, controller);
         Thread thread = new Thread(machineController);
         thread.start();

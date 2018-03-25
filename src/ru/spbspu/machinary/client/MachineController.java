@@ -14,15 +14,15 @@ public class MachineController implements Runnable {
     public void run() {
         String input = "Stand by";
         while (!Thread.interrupted() && !isInterrupt) {
+            // FIXME: 25.03.2018
             machineConnector.send(input);
-            controller.setMessage(input);
-            System.out.println("test");
+            Action action = controller.setMessage(input);
             input = machineConnector.getReplyStr();
         }
         machineConnector.closeConnection();
     }
 
-    public void finish() { // FIXME: 23.02.2018  
+    public void finish() {
         isInterrupt = true;
     }
 }

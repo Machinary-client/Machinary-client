@@ -17,7 +17,7 @@
   </rowConstraints>
    <children>
       <Label id="currentCommandLabel" fx:id="currentCommandLabel" text="current" GridPane.rowIndex="1" />
-      <ListView fx:id="historyOfCommands" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />
+      <ListView fx:id="historyOfCommands" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />
       <GridPane fx:id="pane">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

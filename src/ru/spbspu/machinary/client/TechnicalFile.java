@@ -53,7 +53,7 @@ public class TechnicalFile {
         if ((action == null) && (unknownCommand != null)) {
             action = unknownCommand;
         }
-        return action; // TODO: 16.03.2018 FIXME
+        return action;
 
     }
 
