@@ -1,5 +1,8 @@
+technology_switcher: "mscdocument"
+unknown_command: skip
+"Finish": exit
 "Stop": "res/images/stop.png"
 "Exit": "res/images/keepcalm.png"
 "Stand by": "res/images/standby.jpg"
-unknown_command: skip
-image_delay: "10000"
+
+

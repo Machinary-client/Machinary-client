@@ -1,0 +1,8 @@
+"TAT: out intialize() to SUT; /*1*/" : "res/images/Bolt1.jpeg"
+"TAT: out setPosition ( 0, 0, 0 ) to SUT; /*2*/" : "res/videos/installation1.mp4"
+"TAT: out setTool(_rook) to SUT; /*3*/" : "res/images/Bolt2.jpeg"
+"TAT: out moveTool ( 0, 0, 100, 0, 0 ) to SUT; /*4*/" : "res/images/Bolt3.jpeg"
+"TAT: out setTool(_rubber) to SUT; /*5*/" : "res/images/Bolt4.jpeg"
+"TAT: out moveTool ( 0, 0, 0, 0, 0 ) to SUT; /*6*/" : "res/images/Bolt5.jpeg"
+"TAT: out setTool(_blank) to SUT; /*7*/" : "res/images/Bolt6.jpeg"
+"TAT: out EndWork() to SUT; /*8*/" : "res/videos/shipping1.mp4"
