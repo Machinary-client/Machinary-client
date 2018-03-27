@@ -125,7 +125,7 @@ public class TechnicalProcess {
                 if (tSwitcher.length() >= command.length()) {
                     throw new IOException("command must have name of switcher");
                 }
-                String tName = command.substring(switchProcess.length() + 1);
+                String tName = command.substring(tSwitcher.length() + 1);
                 return new Action(ActionType.SWITCH_TECHNOLOGY, new ArrayList<>(Collections.singletonList(tName)));
             }
         }

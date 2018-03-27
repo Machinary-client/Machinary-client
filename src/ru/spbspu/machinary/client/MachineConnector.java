@@ -22,7 +22,7 @@ public class MachineConnector implements Connector {
         open = true;
         finish = false;
         context = ZMQ.context(1);
-        socket = context.socket(ZMQ.REQ);
+        socket = context.socket(ZMQ.REP);
         socket.connect(address);
     }
 

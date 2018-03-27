@@ -53,7 +53,7 @@ public class FXMLController implements Controller {
         Executable show = null;
         try {
             show = analyze.getExec(str);
-        } catch ( IOException | InvalidTypeException e) {
+        } catch (IOException | InvalidTypeException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
@@ -115,7 +115,8 @@ public class FXMLController implements Controller {
                         throw new RuntimeException("Process must have name");
                     }
                     process = new TechnicalProcess(name);
-                    return pane1 -> {};
+                    return pane1 -> {
+                    };
 
                 case SWITCH_TECHNOLOGY:
                     return pane1 -> {
@@ -128,9 +129,7 @@ public class FXMLController implements Controller {
         }
 
         private void cleanZeroCell(GridPane pane1) {
-            if (!pane1.getChildren().isEmpty()) {
-                pane1.getChildren().remove(0);
-            }
+            pane1.getChildren().removeAll(pane1.getChildren());
         }
 
         private void showImage(GridPane panel, String imagePath) {
@@ -145,8 +144,9 @@ public class FXMLController implements Controller {
                 double w = image.getWidth();
                 double width = panel.getWidth();
                 imageView.setFitWidth(width);
-                imageView.setFitHeight(h/w * width);
-                imageView.autosize();
+                imageView.setFitHeight(h / w * width);
+                imageView.setX(0);
+                imageView.setY(0);
                 panel.add(imageView, 0, 0);
                 latch.countDown();
             });
@@ -165,7 +165,16 @@ public class FXMLController implements Controller {
 
         private void showVideo(GridPane panel, String videoPath) {
             CountDownLatch latch = new CountDownLatch(1);
-            Platform.runLater(() -> cleanZeroCell(panel));
+            CountDownLatch latch1 = new CountDownLatch(1);
+            Platform.runLater(() -> {
+                cleanZeroCell(panel);
+                latch.countDown();
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             File fileVideo = new File(videoPath);
             Platform.runLater(() -> {
                 Media media = new Media(fileVideo.toURI().toString());
@@ -177,6 +186,8 @@ public class FXMLController implements Controller {
                 double width = panel.getWidth();
                 mediaView.setFitWidth(width);
                 mediaView.setFitHeight(w / h * width);
+                mediaView.setX(0);
+                mediaView.setY(0);
                 panel.add(mediaView, 0, 0);
                 mediaPlayer.play();
                 mediaPlayer.setOnEndOfMedia(latch::countDown);

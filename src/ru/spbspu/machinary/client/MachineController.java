@@ -32,6 +32,7 @@ public class MachineController implements Runnable {
             machineConnector.send(input);
         }
         machineConnector.closeConnection();
+        System.exit(0);
     }
 
     public void finish() {
