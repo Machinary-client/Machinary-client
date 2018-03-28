@@ -147,6 +147,7 @@ public class FXMLController implements Controller {
                 imageView.setFitHeight(h / w * width);
                 imageView.setX(0);
                 imageView.setY(0);
+
                 panel.add(imageView, 0, 0);
                 latch.countDown();
             });
@@ -165,29 +166,20 @@ public class FXMLController implements Controller {
 
         private void showVideo(GridPane panel, String videoPath) {
             CountDownLatch latch = new CountDownLatch(1);
-            CountDownLatch latch1 = new CountDownLatch(1);
-            Platform.runLater(() -> {
-                cleanZeroCell(panel);
-                latch.countDown();
-            });
-            try {
-                latch.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Platform.runLater(() -> cleanZeroCell(panel));
+
             File fileVideo = new File(videoPath);
             Platform.runLater(() -> {
                 Media media = new Media(fileVideo.toURI().toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
-                //TODO: tune media player
+
                 MediaView mediaView = new MediaView(mediaPlayer);
                 double h = media.getHeight();
                 double w = media.getWidth();
                 double width = panel.getWidth();
                 mediaView.setFitWidth(width);
                 mediaView.setFitHeight(w / h * width);
-                mediaView.setX(0);
-                mediaView.setY(0);
+
                 panel.add(mediaView, 0, 0);
                 mediaPlayer.play();
                 mediaPlayer.setOnEndOfMedia(latch::countDown);
@@ -210,11 +202,15 @@ public class FXMLController implements Controller {
 
         private void execute(GridPane pane, Action action) {
             List<String> paths = action.getFilesPaths();
+            System.out.println(paths);
+
             for (String path : paths) {
                 if (path.endsWith(".jpg") || path.endsWith(".png") || path.endsWith(".jpeg")) {
+                    System.out.println("must show image");
                     showImage(pane, path);
                 }
                 if (path.endsWith(".mp4")) {
+                    System.out.println("must show video");
                     showVideo(pane, path);
                 }
             }
