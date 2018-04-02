@@ -1,4 +1,4 @@
-"TAT: out initialize() to SUT; /*1*/ ": "res/images/Shovel1.jpeg"
+"TAT: out initialize() to SUT; /*1*/": "res/images/Shovel1.jpeg"
 "TAT: out setPosition ( 0, 0, 100 ) to SUT; /*2*/": "res/videos/installation3.mp4"
 "TAT: out setTool(_spike) to SUT; /*3*/": "res/images/Shovel2.jpeg"
 "TAT: out moveTool ( 0, 0, 75, 0, 0 ) to SUT; /*4*/": "res/images/Shovel3.jpeg"

@@ -16,30 +16,10 @@ public class MachineController implements Runnable {
     public void run() {
         String string = "NULL";
         while (!Thread.interrupted() && !isInterrupt) {
-            /*
-            String input = machineConnector.getReplyStr();
-            if (input == null) {
-                System.out.println("input is null");
-            }
-            Action action = controller.setMessage(input);
-
-            if (action.getActionType() == ActionType.FAIL) {
-                input = "FAIL";
-            }
-            if (action.getActionType() == ActionType.CRUSH) {
-                input = "CRUSH";
-            }
-            if (action.getActionType() == ActionType.EXIT) {
-                isInterrupt = true;
-                input = "FINISH";
-            }
-            machineConnector.send(input);
-            */
-
             machineConnector.send(string);
             string = machineConnector.getReplyStr();
             Action action = controller.setMessage(string);
-
+            System.out.println("Action in run: " + action);
             if (action.getActionType() == ActionType.FAIL) {
                 string = "FAIL";
             }
@@ -50,9 +30,12 @@ public class MachineController implements Runnable {
                 isInterrupt = true;
                 string = "FINISH";
                 machineConnector.send(string);
+                machineConnector.getReplyStr(); // FIXME: 02.04.2018 
             }
         }
+
         machineConnector.closeConnection();
+        System.out.println("Log: connection was closed");
         System.exit(0);
     }
 

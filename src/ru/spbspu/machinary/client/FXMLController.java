@@ -9,13 +9,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
+import javax.script.Bindings;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -91,7 +94,7 @@ public class FXMLController implements Controller {
             videoDelay = process.getVideoDelay();
 
             action = process.getAction(command);
-            System.out.println(action.getActionType());
+            System.out.println(action);
             switch (action.getActionType()) {
                 case EXIT:
                     return pane1 -> exitFromProgram(pane1, action);
@@ -139,14 +142,25 @@ public class FXMLController implements Controller {
             Image image = new Image(fileImage.toURI().toString());
             Platform.runLater(() -> {
                 ImageView imageView = new ImageView(image);
-                //TODO: fixme
+                //It have to different variants stretch image
+                /*
                 double h = image.getHeight();
                 double w = image.getWidth();
                 double width = panel.getWidth();
-                imageView.setFitWidth(width);
-                imageView.setFitHeight(h / w * width);
-                imageView.setX(0);
-                imageView.setY(0);
+                double height = panel.getHeight();
+
+                double imageWidth = width;
+                double imageHeight = h / w * width;
+                if (imageHeight > height) {
+                    imageHeight = height;
+                    imageWidth = w / h * imageHeight;
+                }
+
+                imageView.setFitWidth(imageWidth);
+                imageView.setFitHeight(imageHeight);
+                */
+                imageView.fitWidthProperty().bind(panel.widthProperty());
+                imageView.fitHeightProperty().bind(panel.heightProperty());
 
                 panel.add(imageView, 0, 0);
                 latch.countDown();
@@ -167,20 +181,15 @@ public class FXMLController implements Controller {
         private void showVideo(GridPane panel, String videoPath) {
             CountDownLatch latch = new CountDownLatch(1);
             Platform.runLater(() -> cleanZeroCell(panel));
-
             File fileVideo = new File(videoPath);
             Platform.runLater(() -> {
                 Media media = new Media(fileVideo.toURI().toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
-
                 MediaView mediaView = new MediaView(mediaPlayer);
-                double h = media.getHeight();
-                double w = media.getWidth();
-                double width = panel.getWidth();
-                mediaView.setFitWidth(width);
-                mediaView.setFitHeight(w / h * width);
-
+                mediaView.fitWidthProperty().bind(panel.widthProperty());
+                mediaView.fitHeightProperty().bind(panel.heightProperty());
                 panel.add(mediaView, 0, 0);
+
                 mediaPlayer.play();
                 mediaPlayer.setOnEndOfMedia(latch::countDown);
             });
@@ -197,7 +206,7 @@ public class FXMLController implements Controller {
         }
 
         private void exitFromProgram(GridPane pane, Action action) {
-
+            Platform.exit();
         }
 
         private void execute(GridPane pane, Action action) {

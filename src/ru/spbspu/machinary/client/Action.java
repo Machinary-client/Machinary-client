@@ -24,6 +24,11 @@ public class Action {
     public List<String> getFilesPaths() {
         return files;
     }
+
+    @Override
+    public String toString() {
+        return "Type: " + actionType + " paths: " + files;
+    }
 }
 
 enum ActionType {

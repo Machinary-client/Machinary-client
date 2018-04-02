@@ -28,6 +28,7 @@ public class MachineConnector implements Connector {
 
     @Override
     public void closeConnection() {
+        System.out.println("try to close connection");
         if (open && !finish) {
             socket.close();
             context.term();
