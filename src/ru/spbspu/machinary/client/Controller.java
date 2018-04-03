@@ -5,5 +5,5 @@ interface Controller {
      * Send message to UI
      * @param string message that will be show on the screen
      */
-    void setMessage(final String string);
+    Action setMessage(final String string);
 }

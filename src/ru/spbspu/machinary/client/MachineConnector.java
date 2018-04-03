@@ -9,25 +9,26 @@ public class MachineConnector implements Connector {
     private boolean open = false;
     private boolean finish = false;
 
-    MachineConnector(String address) {
+    MachineConnector(String address, int socketType) {
         this.address = address;
-        openConnection();
+        openConnection(socketType);
     }
 
     @Override
-    public void openConnection() {
+    public void openConnection(int socketType) {
         if (open) {
             return;
         }
         open = true;
         finish = false;
         context = ZMQ.context(1);
-        socket = context.socket(ZMQ.REQ);
+        socket = context.socket(socketType);
         socket.connect(address);
     }
 
     @Override
     public void closeConnection() {
+        System.out.println("try to close connection");
         if (open && !finish) {
             socket.close();
             context.term();

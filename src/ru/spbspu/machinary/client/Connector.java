@@ -4,7 +4,7 @@ interface Connector {
     /**
      * Open (initialize) connection between client and server, must start in constructor
      */
-    void openConnection();
+    void openConnection(int socketType);
 
     /**
      * close connection between server and client, free all resources
