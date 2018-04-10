@@ -1,6 +1,5 @@
 package ru.spbspu.machinary.client;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.InvalidPropertiesFormatException;

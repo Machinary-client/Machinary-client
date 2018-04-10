@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="Machinary-client.jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Machinary_client_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Machinary_client.jar">
+        <element id="module-output" name="Machinary-client" />
+      </element>
+      <element id="library" level="project" name="org.zeromq:jeromq:0.4.2" />
+    </root>
+  </artifact>
+</component>

@@ -1,13 +1,10 @@
 package ru.spbspu.machinary.client;
 
-
-import com.sun.jdi.InvalidTypeException;
-import zmq.ZError;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 public class TechnicalProcess {
 
@@ -23,7 +20,7 @@ public class TechnicalProcess {
     private Action technologySwitcher;
     private Action processSwitcher;
 
-    public TechnicalProcess() throws IOException, InvalidTypeException {
+    public TechnicalProcess() throws IOException, DataFormatException {
         common = readCommon();
         processSwitcher = common.getProcessSwitcher();
         if (processSwitcher == null) {
@@ -32,7 +29,7 @@ public class TechnicalProcess {
         technologySwitcher = common.getTechnologySwitcher();
     }
 
-    public TechnicalProcess(String name) throws IOException, InvalidTypeException { // TODO: 23.03.2018 add nonnull
+    public TechnicalProcess(String name) throws IOException, DataFormatException { // TODO: 23.03.2018 add nonnull
         this();
         defaultFile = new TechnicalFile(PATH + name + "/" + DEFAULT_FILE_NAME + FILE_EXTENSION);
         processName = name;
@@ -43,7 +40,7 @@ public class TechnicalProcess {
         technologySwitcher = switcher;
     }
 
-    public Action getAction(String command) throws IOException, InvalidTypeException { // TODO: 23.03.2018 add NonNull
+    public Action getAction(String command) throws IOException, DataFormatException { // TODO: 23.03.2018 add NonNull
         Action action = checkToTechnologyAndProcessSwitchers(command);
         if ((action != null) && action.getActionType() == ActionType.SWITCH_TECHNOLOGY) {
             switchTechnology(action.getFilesPaths().get(0));
@@ -132,7 +129,7 @@ public class TechnicalProcess {
         return null;
     }
 
-    private void switchTechnology(String techName) throws IOException, InvalidTypeException {
+    private void switchTechnology(String techName) throws IOException, DataFormatException {
 
         if (processName == null) {
             throw new IOException("Can't find process name and path");
@@ -140,7 +137,7 @@ public class TechnicalProcess {
         currentFile = new TechnicalFile(PATH + processName + "/" + techName + FILE_EXTENSION);
     }
 
-    private static TechnicalFile readCommon() throws IOException, InvalidTypeException {
+    private static TechnicalFile readCommon() throws IOException, DataFormatException {
         return new TechnicalFile(PATH + "common.cfg");
     }
 }

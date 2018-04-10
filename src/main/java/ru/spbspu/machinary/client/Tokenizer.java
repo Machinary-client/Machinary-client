@@ -1,11 +1,9 @@
 package ru.spbspu.machinary.client;
 
-import com.sun.jdi.InvalidTypeException;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.zip.DataFormatException;
 
 public class Tokenizer {
 
@@ -35,7 +33,7 @@ public class Tokenizer {
         return inputStream.available() > 0;
     }
 
-    Token next() throws IOException, InvalidTypeException {
+    Token next() throws IOException, DataFormatException {
         Token token = new Token();
         int quotes = 0;
         boolean end = false;
@@ -82,7 +80,7 @@ public class Tokenizer {
                     checkQuotes = false;
                     ch = (char) inputStream.read();
                     if (ch != '\\' && ch != '#' && ch != '\'' && ch != '\"') {
-                        throw new InvalidTypeException("Invalid token symbol " + token);
+                        throw new DataFormatException("Invalid token symbol " + token);
                     }
                 }
                 token.value += ch;

@@ -1,14 +1,11 @@
 package ru.spbspu.machinary.client;
 
-import com.sun.jdi.InvalidTypeException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 
 public class Main extends Application {
@@ -21,7 +18,6 @@ public class Main extends Application {
         } catch (FileNotFoundException | InvalidPropertiesFormatException e) {
             e.printStackTrace();
         }
-
         launch(args);
         if (machineController != null) {
             machineController.finish();
@@ -38,7 +34,7 @@ public class Main extends Application {
             port = "5555";
         }
         System.out.printf("IP: %s:%s\n", ip, port);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sample.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Client");
         FXMLController controller = loader.getController();
@@ -48,5 +44,4 @@ public class Main extends Application {
         thread.start();
         primaryStage.show();
     }
-
 }

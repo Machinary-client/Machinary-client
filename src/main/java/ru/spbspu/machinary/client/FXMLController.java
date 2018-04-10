@@ -1,29 +1,22 @@
 package ru.spbspu.machinary.client;
 
-import com.sun.jdi.InvalidTypeException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-
-import javax.script.Bindings;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
+import java.util.zip.DataFormatException;
 
 public class FXMLController implements Controller {
     @FXML
@@ -56,7 +49,7 @@ public class FXMLController implements Controller {
         Executable show = null;
         try {
             show = analyze.getExec(str);
-        } catch (IOException | InvalidTypeException e) {
+        } catch (IOException | DataFormatException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
@@ -79,7 +72,7 @@ public class FXMLController implements Controller {
         Analyze() {
             try {
                 process = new TechnicalProcess();
-            } catch (IOException | InvalidTypeException e) {
+            } catch (IOException | DataFormatException e) {
                 System.err.println("Problem with Technical process file");
                 e.printStackTrace();
             }
@@ -89,7 +82,7 @@ public class FXMLController implements Controller {
             return action;
         }
 
-        Executable getExec(String command) throws IOException, InvalidTypeException {
+        Executable getExec(String command) throws IOException, DataFormatException {
             imageDelay = process.getImageDelay();
             videoDelay = process.getVideoDelay();
 

@@ -1,12 +1,11 @@
 package ru.spbspu.machinary.client;
 
-import com.sun.jdi.InvalidTypeException;
 import javafx.util.Pair;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 public class TechnicalFile {
 
@@ -26,8 +25,7 @@ public class TechnicalFile {
 
     //private Action exit,skip,fail,crush;
 
-
-    public TechnicalFile(String path) throws IOException, InvalidTypeException {
+    public TechnicalFile(String path) throws IOException, DataFormatException {
         Tokenizer tokenizer = new Tokenizer(new FileInputStream(new File(path)));
 
         tokenizer.setInputActions(new ArrayList<>(Arrays.asList("exit", "fail", "skip", "crush")));
@@ -65,23 +63,21 @@ public class TechnicalFile {
         return processSwitcher;
     }
 
-    private void parseFile(Tokenizer tokenizer) throws IOException, InvalidTypeException {
+    private void parseFile(Tokenizer tokenizer) throws IOException, DataFormatException {
         Token currentToken = null;
         Token prevToken = null;
         Token important = null;
         do {
             try {
                 currentToken = tokenizer.next();
-            } catch (InvalidTypeException invalidTypeForEncoding) {
+            } catch (DataFormatException invalidTypeForEncoding) {
                 invalidTypeForEncoding.printStackTrace();
             }
             if (currentToken == null) {
                 break;
             }
-
             switch (currentToken.type) {
                 case SPECIAL_COMMAND: {
-
                     if (prevToken != null && ((prevToken.type == TokenType.SPECIAL_COMMAND) ||
                             (prevToken.type == TokenType.ASSIGNER) || (prevToken.type == TokenType.CUSTOMER_COMMAND))) {
                         throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s",
@@ -105,9 +101,7 @@ public class TechnicalFile {
 
                     break;
                 }
-
                 case INPUT_ACTION: {
-
                     if (important == null || prevToken.type == null || prevToken.type != TokenType.ASSIGNER ||
                             ((important.type != TokenType.CUSTOMER_COMMAND) && (important.type != TokenType.SPECIAL_COMMAND))) {
                         throw new InvalidPropertiesFormatException(String.format("Invalid sequence of tokens: %s; %s; %s",
@@ -139,7 +133,6 @@ public class TechnicalFile {
 
                     }
                     if (prevToken != null && prevToken.type == TokenType.ASSIGNER) {
-
                         if (important != null && important.type == TokenType.SPECIAL_COMMAND) {
                             if (important.value.equals(PROCESS_SWITCHER)) {
                                 processSwitcher = new Action(ActionType.SWITCH_PROCESS,
@@ -201,18 +194,16 @@ public class TechnicalFile {
                                         important, prevToken, currentToken));
                         }
                     } catch (NumberFormatException err) {
-                        throw new InvalidTypeException("Invalid NUMBER " + currentToken);
+                        throw new DataFormatException("Invalid NUMBER " + currentToken);
                     }
                     important = null;
                     prevToken = null;
                     break;
                 }
                 case UNKNOWN:
-                    throw new InvalidTypeException("Unknown token: " + currentToken);
-
-
+                    throw new DataFormatException("Unknown token: " + currentToken);
                 case INVALID:
-                    throw new InvalidTypeException("Invalid token: " + currentToken);
+                    throw new DataFormatException("Invalid token: " + currentToken);
             }
         } while (tokenizer.hasNext());
 
