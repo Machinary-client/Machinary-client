@@ -82,6 +82,13 @@ public class FXMLController implements Controller {
             return action;
         }
 
+        /**
+         *
+         * @param command that should be execute by program
+         * @return executable function that display image and videos
+         * @throws IOException
+         * @throws DataFormatException
+         */
         Executable getExec(String command) throws IOException, DataFormatException {
             imageDelay = process.getImageDelay();
             videoDelay = process.getVideoDelay();
@@ -135,7 +142,7 @@ public class FXMLController implements Controller {
             Image image = new Image(fileImage.toURI().toString());
             Platform.runLater(() -> {
                 ImageView imageView = new ImageView(image);
-                //It have to different variants stretch image
+                //It have two different variants for stretching images
                 /*
                 double h = image.getHeight();
                 double w = image.getWidth();
@@ -230,6 +237,9 @@ public class FXMLController implements Controller {
 
 }
 
+/**
+ * Special interface for creating execution functions
+ */
 interface Executable {
     void exec(GridPane pane);
 }

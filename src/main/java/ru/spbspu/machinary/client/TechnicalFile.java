@@ -23,8 +23,12 @@ public class TechnicalFile {
     private Action technologySwitcher;
     private Action processSwitcher;
 
-    //private Action exit,skip,fail,crush;
-
+    /**
+     *
+     * @param path - path to technical file *.tech
+     * @throws IOException
+     * @throws DataFormatException throws if data has incorrect format
+     */
     public TechnicalFile(String path) throws IOException, DataFormatException {
         Tokenizer tokenizer = new Tokenizer(new FileInputStream(new File(path)));
 
@@ -38,14 +42,27 @@ public class TechnicalFile {
         parseFile(tokenizer);
     }
 
+    /**
+     *
+     * @return <code>Pair</>first - is parametr exists, second - value
+     */
     public Pair<Boolean, Long> getImageDelay() {
         return imageDelay;
     }
 
+    /**
+     *
+     * @return <code>Pair</>first - is parametr exists, second - value
+     */
     public Pair<Boolean, Long> getVideoDelay() {
         return videoDelay;
     }
 
+    /**
+     *
+     * @param command that should be execute
+     * @return Action that must be execute
+     */
     public Action getAction(String command) {
         Action action = customerCommands.get(command);
         if ((action == null) && (unknownCommand != null)) {
@@ -55,10 +72,17 @@ public class TechnicalFile {
 
     }
 
+    /**
+     *
+     * @return Technology switcher as a String
+     */
     public Action getTechnologySwitcher() {
         return technologySwitcher;
     }
-
+    /**
+     *
+     * @return Process switcher as a String
+     */
     public Action getProcessSwitcher() {
         return processSwitcher;
     }

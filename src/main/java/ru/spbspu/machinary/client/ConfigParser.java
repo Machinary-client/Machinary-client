@@ -5,6 +5,10 @@ import java.io.FileNotFoundException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Scanner;
 
+/**
+ * Special file for parsing configuration file, that have ip address and port to connect
+ */
+
 public class ConfigParser {
     private String ip;
     private String port;
@@ -13,19 +17,40 @@ public class ConfigParser {
     private final String ASSIGNER = ":";
     private File file;
 
+    /**
+     *
+     * @param path - path to configuration file
+     * @throws FileNotFoundException - throws if file isn't found
+     * @throws InvalidPropertiesFormatException - throws if data in file has incorrect format
+     */
     public ConfigParser(String path) throws FileNotFoundException, InvalidPropertiesFormatException {
         file = new File(path);
         parse();
     }
 
+    /**
+     *
+     * @return IP address (IPv4) for connection as a String
+     */
     public String getIp() {
         return ip;
     }
 
+    /**
+     *
+     * @return port of host for connection as a String
+     */
     public String getPort() {
         return port;
     }
 
+    /**
+     *
+     * Parse configuration file and initialize variables like ip and port
+     *
+     * @throws FileNotFoundException - throws if file isn't found
+     * @throws InvalidPropertiesFormatException - throws if data in file has incorrect format
+     */
     private void parse() throws FileNotFoundException, InvalidPropertiesFormatException {
         Scanner scanner = new Scanner(file);
         while (scanner.hasNext()) {

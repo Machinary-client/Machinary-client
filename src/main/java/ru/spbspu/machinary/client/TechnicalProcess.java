@@ -40,6 +40,13 @@ public class TechnicalProcess {
         technologySwitcher = switcher;
     }
 
+    /**
+     *
+     * @param command - command that must be executye by this technology process
+     * @return Action for execute
+     * @throws IOException
+     * @throws DataFormatException
+     */
     public Action getAction(String command) throws IOException, DataFormatException { // TODO: 23.03.2018 add NonNull
         Action action = checkToTechnologyAndProcessSwitchers(command);
         if ((action != null) && action.getActionType() == ActionType.SWITCH_TECHNOLOGY) {

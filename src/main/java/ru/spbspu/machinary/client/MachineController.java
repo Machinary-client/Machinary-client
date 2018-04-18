@@ -18,6 +18,7 @@ public class MachineController implements Runnable {
         while (!Thread.interrupted() && !isInterrupt) {
             machineConnector.send(string);
             string = machineConnector.getReplyStr();
+            System.out.println("Get string: " + string);
             Action action = controller.setMessage(string);
             System.out.println("Action in run: " + action);
             if (action.getActionType() == ActionType.FAIL) {
@@ -39,6 +40,9 @@ public class MachineController implements Runnable {
         System.exit(0);
     }
 
+    /**
+     * Special function for close Connection
+     */
     public void finish() {
         isInterrupt = true;
     }
