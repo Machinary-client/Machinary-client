@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: jeromq-0.4.2.jar jnacl-0.1.0.jar
-Main-Class: ru.spbspu.machinary.client.Main
-
