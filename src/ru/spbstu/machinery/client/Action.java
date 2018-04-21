@@ -1,4 +1,4 @@
-package ru.spbspu.machinary.client;
+package ru.spbstu.machinery.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;

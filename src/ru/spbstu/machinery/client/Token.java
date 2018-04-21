@@ -1,4 +1,4 @@
-package ru.spbspu.machinary.client;
+package ru.spbstu.machinery.client;
 
 public class Token {
     TokenType type = TokenType.UNKNOWN;

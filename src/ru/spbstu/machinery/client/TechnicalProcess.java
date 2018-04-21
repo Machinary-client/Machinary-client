@@ -1,4 +1,4 @@
-package ru.spbspu.machinary.client;
+package ru.spbstu.machinery.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +37,9 @@ public class TechnicalProcess {
         if ((switcher == null) && technologySwitcher == null) {
             throw new IOException("Technology switcher must be in default.tech on process: " + name + " or in config.cfg");
         }
-        technologySwitcher = switcher;
+        if (switcher!=null) {
+            technologySwitcher = switcher;
+        }
     }
 
     /**
